@@ -1,12 +1,11 @@
 import z from "zod";
 import prismaClient from "../utils/prismaClient.mjs";
 import jsonwebtoken from "jsonwebtoken";
-import env from '../utils/env.mjs';
 import bcrypt from 'bcrypt';
 
 const userSchema = z.object({
   id: z.string().optional(),
-  login: z.string().optional(),
+  username: z.string().optional(),
   email: z.string().email(),
   password: z.string().min(1),
   icon: z.number().default(0),
@@ -39,25 +38,15 @@ export default class UserController {
 
   }
 
-  async index(request, response) {
-    const users = await prismaClient.user.findMany();
-    response.send({
-      page: 1,
-      pageSize: 20,
-      totalCount: users.length,
-      items: users,
-    });
-  }
-
   async storeUser(request, response) {
-    const { nome, email, password } = request.body;
+    const { username, email, password, icon } = request.body;
 
-    const user = userSchema.parse ({email, nome, password});
+    const user = userSchema.parse ({email, username, password, icon});
 
-    const newUser = await prismaClient.user.findUnique({ where: { email } });
+    const checkUserEmail = await prismaClient.user.findUnique({ where: { email } });
 
-    if (newUser) {
-      return response.status(404).send({ message: "User already exists." });
+    if (checkUserEmail) {
+      return response.status(404).send({ message: "Email already being used." });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -85,21 +74,4 @@ export default class UserController {
     response.send(user);
   }
 
-  async destroyUser(request, response) {
-    const { email } = request.params;
-
-    const deleteUser = await prismaClient.user.findUnique({ where: { email } });
-
-    if (!deleteUser) {
-      return response.status(404).send({ message: "User not found." });
-    }
-    try {
-      await prismaClient.user.delete({ where: { email } });
-    } catch (error) {
-      return response.status(400).send({ message: "User with characters linked to them" });
-    }
-      
-
-    response.status(200).send({ message: `User ${email} Deleted` });
-  }
 }
