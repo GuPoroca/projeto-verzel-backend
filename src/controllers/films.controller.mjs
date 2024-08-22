@@ -3,8 +3,12 @@
 export default class FilmsController {
   async search(request, response) {
     var filmsSearched;
+    const {searchQuery} = request.body;
+    const query = searchQuery.replace(/ /g, '%20');
+    console.log(query);
+    
     const url =
-      "https://api.themoviedb.org/3/search/movie?query=Blade%20Runner&include_adult=false&language=en-US&page=1";
+      `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=1`;
     const options = {
       method: "GET",
       headers: {
@@ -12,7 +16,7 @@ export default class FilmsController {
         Authorization: process.env.TOKEN,
       },
     };
-    fetch(url, options)
+    await fetch(url, options)
       .then((res) => res.json())
       .then((json) => filmsSearched = json)
       .catch((err) => console.error("error:" + err));
@@ -20,4 +24,7 @@ export default class FilmsController {
         result: filmsSearched
     });
   }
+
+
+
 }
