@@ -21,9 +21,19 @@ model User {
 }
 
 model FavoriteMovie {
-  user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  movie  Movie  @relation(fields: [movieId], references: [id])
   movieId Int
 
   @@id([userId, movieId]) // Chave primária composta
+}
+
+model Movie {
+  id Int @id @default(autoincrement())
+  name   String
+  rating Float
+  image  String
+
+  favoriteMovies FavoriteMovie[]
 }

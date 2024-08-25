@@ -13,7 +13,7 @@ export default class FilmsController {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: process.env.TOKEN,
+        Authorization: process.env.TMBB_TOKEN,
       },
     };
     await fetch(url, options)

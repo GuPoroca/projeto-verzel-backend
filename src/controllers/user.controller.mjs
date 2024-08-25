@@ -32,7 +32,7 @@ export default class UserController {
 
     delete user.password;
     
-    const token = jsonwebtoken.sign(user, env.JWT_SECRET);
+    const token = jsonwebtoken.sign(user, process.env.JWT_SECRET);
 
     response.send({token});
 
