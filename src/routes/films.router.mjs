@@ -10,5 +10,10 @@ const filmsController = new FilmsController();
     filmsController.search(request, response)
   );
 
+  //favorite
+  routes.post('/api/films', (request, response) =>
+    filmsController.favorite(request, response)
+  );
+
   
   export default routes;

@@ -30,7 +30,7 @@ model FavoriteMovie {
 }
 
 model Movie {
-  id Int @id @default(autoincrement())
+  id Int @id
   name   String
   rating Float
   image  String

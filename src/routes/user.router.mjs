@@ -6,7 +6,7 @@ const routes = Router();
 const userController = new UserController();
 
 //auth
-routes.get("/api/auth", (request, response) =>
+routes.post("/api/auth", (request, response) =>
   userController.auth(request, response)
 );
 //cria 1 user
