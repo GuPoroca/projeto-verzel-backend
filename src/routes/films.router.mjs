@@ -15,5 +15,9 @@ const filmsController = new FilmsController();
     filmsController.favorite(request, response)
   );
 
+  routes.get('/api/films/:hash', (request, response) =>
+    filmsController.favoriteList(request, response)
+  );
+
   
   export default routes;

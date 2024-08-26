@@ -88,4 +88,30 @@ export default class FilmsController {
 
     return response.status(201).send(favorite);
   }
+
+  async favoriteList(request, response) {
+    const { hash } = request.params;
+
+    const user = await prismaClient.user.findUnique({
+      where: { hash: hash },
+      include: {
+        favoriteMovies: {
+          include: {
+            movie: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      return response.status(404).send({ error: "User not found" });
+    }
+
+    const favoriteMoviesList = user.favoriteMovies.map(
+      (favorite) => favorite.movie
+    );
+
+    return response.status(200).send(favoriteMoviesList);
+  }
+
 }
