@@ -4,6 +4,7 @@
   "description": "Backend para o projeto da Verzel",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "test",
     "dev": "nodemon --env-file=.env src/index.mjs"
   },
