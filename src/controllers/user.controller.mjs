@@ -14,25 +14,23 @@ const userSchema = z.object({
 export default class UserController {
   async auth(request, response) {
     const { email, password } = request.body;
-
-    userSchema.parse({ email, password });
-
-    const user = await prismaClient.user.findFirst({ where: { email } });
-
+  
+    const user = await prismaClient.user.findUnique({ where: { email } });
+  
     if (!user) {
       return response.status(404).send({ message: "User not found." });
     }
-
+  
     const isValid = await bcrypt.compare(password, user.password);
-
+  
     if (!isValid) {
       return response.status(404).send({ message: "User not found." });
     }
-
+  
     delete user.password;
-
-    const token = jsonwebtoken.sign(user, process.env.JWT_SECRET);
-
+  
+    const token = jsonwebtoken.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
+  
     response.send({ token });
   }
 
@@ -63,18 +61,6 @@ export default class UserController {
     delete user.password;
 
     response.send({ message: "stored", data: user });
-  }
-
-  async getOneUser(request, response) {
-    const { email } = request.params;
-
-    const user = await prismaClient.user.findUnique({ where: { email } });
-
-    if (!user) {
-      return response.status(404).send({ message: "User not found." });
-    }
-
-    response.send(user);
   }
 
   generateHash(email) {

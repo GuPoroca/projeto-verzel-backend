@@ -13,10 +13,6 @@ routes.post("/api/auth", (request, response) =>
 routes.post("/api/user", (request, response) =>
   userController.storeUser(request, response)
 );
-//get 1 user
-routes.get("/api/user/:email", (request, response) =>
-  userController.getOneUser(request, response)
-);
 
 
 export default routes;
