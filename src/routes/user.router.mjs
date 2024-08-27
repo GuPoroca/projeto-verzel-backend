@@ -13,7 +13,7 @@ routes.post("/api/auth", (request, response) =>
 routes.post("/api/user", (request, response) =>
   userController.storeUser(request, response)
 );
-
+//pega o user dado o hash
 routes.get("/api/user/:hash", (request, response) =>
   userController.getUser(request, response)
 );

@@ -10,15 +10,11 @@ routes.post("/api/films", (request, response) =>
   filmsController.search(request, response)
 );
 
-routes.post("/api/test", (request, response) =>
-  filmsController.test(request, response)
-);
-
 //favorite
 routes.post("/api/favorite", (request, response) =>
   filmsController.favorite(request, response)
 );
-
+//pega a lista de favoritos dado hash
 routes.get("/api/films/:hash", (request, response) =>
   filmsController.favoriteList(request, response)
 );
