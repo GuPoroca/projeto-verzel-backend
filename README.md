@@ -11,6 +11,7 @@
 ## Get Started
 
 LINK PARA <a href="https://youtu.be/ATgcJQ5G32c" target="_blank"> VIDEO </a> APRESENTAÇÃO
+
 Para rodar, primeiro, crie um .env com as variáveis que preferir,
 no .env.example tem as variáveis necessárias e qual o formato delas.
 abra o terminal na pasta do projeto e,
