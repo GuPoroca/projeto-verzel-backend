@@ -14,5 +14,8 @@ routes.post("/api/user", (request, response) =>
   userController.storeUser(request, response)
 );
 
+routes.get("/api/user/:hash", (request, response) =>
+  userController.getUser(request, response)
+);
 
 export default routes;

@@ -1,11 +1,26 @@
 import prismaClient from "../utils/prismaClient.mjs";
 
-export default class FilmsController {
-  async search(request, response) {
-    var filmsSearched;
-    const { searchQuery } = request.body;
-    const query = searchQuery.replace(/ /g, "%20");
+async function getFavoriteMoviesForUser(userId, movieIds) {
+  return await prismaClient.favoriteMovie.findMany({
+    where: {
+      userId: userId,
+      movieId: {
+        in: movieIds,
+      },
+    },
+    select: {
+      movieId: true,
+    },
+  });
+}
 
+export default class FilmsController {
+
+  async search(request, response) {
+    const { searchQuery, userId } = request.body; // Inclua userId na requisição
+  
+    var filmsSearched;
+    const query = searchQuery.replace(/ /g, "%20");
     const url = `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=1`;
     const options = {
       method: "GET",
@@ -14,14 +29,31 @@ export default class FilmsController {
         Authorization: process.env.TMDB_TOKEN,
       },
     };
-
-    await fetch(url, options)
-      .then((res) => res.json())
-      .then((json) => (filmsSearched = json))
-      .catch((err) => console.error("error:" + err));
-    response.send({
-      result: filmsSearched,
-    });
+  
+    try {
+      const fetchResponse = await fetch(url, options);
+      filmsSearched = await fetchResponse.json();
+  
+      // Verificar quais filmes são favoritos
+      const movieIds = filmsSearched.results.map(movie => movie.id);
+      const favoriteMovies = await getFavoriteMoviesForUser(userId, movieIds);
+  
+      // Mapear os filmes para incluir a informação de favoritos
+      const results = filmsSearched.results.map(movie => ({
+        ...movie,
+        isFavorite: favoriteMovies.some(fav => fav.movieId === movie.id),
+      }));
+  
+      response.send({
+        result: {
+          ...filmsSearched,
+          results,
+        },
+      });
+    } catch (err) {
+      console.error("error:" + err);
+      response.status(500).send({ error: 'An error occurred' });
+    }
   }
 
   async favorite(request, response) {

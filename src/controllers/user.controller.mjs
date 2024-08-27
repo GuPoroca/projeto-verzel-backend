@@ -63,6 +63,18 @@ export default class UserController {
     response.send({ message: "stored", data: user });
   }
 
+  async getUser(request, response){
+    const { hash } = request.params;
+
+    const user = await prismaClient.user.findUnique({ where: { hash } });
+
+    if (!user) {
+      return response.status(404).send({ message: "User not found." });
+    }
+
+    response.send(user.username);
+  }
+
   generateHash(email) {
     // Base62 character set
     const referenceTable = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
