@@ -56,6 +56,10 @@ export default class FilmsController {
     }
   }
 
+  async test(request, response) {
+    return "teste";
+  }
+
   async favorite(request, response) {
     const movie = request.body;
     const logged_user = request.logged_user;
