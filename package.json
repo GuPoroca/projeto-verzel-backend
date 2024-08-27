@@ -2,7 +2,10 @@
   "name": "projeto-verzel-backend",
   "version": "1.0.0",
   "description": "Backend para o projeto da Verzel",
-  "main": "index.js",
+  "main": "./src/index.mjs",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "start": "node ./src/index.mjs",
     "test": "test",
